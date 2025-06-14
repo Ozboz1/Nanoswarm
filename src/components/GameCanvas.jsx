@@ -9,7 +9,6 @@ export default function GameCanvas() {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
-    // Make canvas full screen
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -17,7 +16,6 @@ export default function GameCanvas() {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    // Input
     const handleKeyDown = (e) => (keys.current[e.key.toLowerCase()] = true);
     const handleKeyUp = (e) => (keys.current[e.key.toLowerCase()] = false);
     window.addEventListener('keydown', handleKeyDown);
@@ -36,30 +34,40 @@ export default function GameCanvas() {
     const draw = () => {
       const { width, height } = canvas;
 
-      // Background
-      ctx.fillStyle = '#1a1a1a';
+      // Light background
+      ctx.fillStyle = '#f0f0f0';
       ctx.fillRect(0, 0, width, height);
 
-      // Motion dot grid
-      ctx.fillStyle = '#2a2a2a';
+      // Moving grid lines
       const spacing = 40;
+      ctx.strokeStyle = '#cccccc';
+      ctx.lineWidth = 1;
+
+      // Vertical lines
       for (let x = -player.x % spacing; x < width; x += spacing) {
-        for (let y = -player.y % spacing; y < height; y += spacing) {
-          ctx.beginPath();
-          ctx.arc(x, y, 1.5, 0, Math.PI * 2);
-          ctx.fill();
-        }
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
       }
 
-      // Player in center
+      // Horizontal lines
+      for (let y = -player.y % spacing; y < height; y += spacing) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      // Player (centered)
       ctx.fillStyle = 'cyan';
       ctx.beginPath();
       ctx.arc(width / 2, height / 2, 20, 0, Math.PI * 2);
       ctx.fill();
 
-      // Game title
-      ctx.font = '20px Arial';
-      ctx.fillStyle = '#ccc';
+      // Game name
+      ctx.font = '18px Arial';
+      ctx.fillStyle = '#444';
       ctx.textAlign = 'center';
       ctx.fillText('NanoSwarm.io', width / 2, 30);
     };
@@ -69,7 +77,6 @@ export default function GameCanvas() {
       draw();
       requestAnimationFrame(loop);
     };
-
     loop();
 
     return () => {
