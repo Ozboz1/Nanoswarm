@@ -1,7 +1,1 @@
-export default class SwarmUnit {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.radius = 10;
-  }
-}
+// Placeholder for src/logic/SwarmUnit.js
