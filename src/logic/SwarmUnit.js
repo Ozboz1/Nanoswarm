@@ -1,1 +1,7 @@
-// Placeholder for swarm unit logic
+export default class SwarmUnit {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.radius = 10;
+  }
+}
