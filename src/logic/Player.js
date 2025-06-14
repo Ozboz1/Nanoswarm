@@ -1,1 +1,1 @@
-// Placeholder for src/logic/Player.js
+// Player logic placeholder

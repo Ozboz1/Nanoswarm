@@ -1,1 +1,2 @@
-// Placeholder for src/components/LeaderboardPanel.jsx
+// Leaderboard logic placeholder
+export default function LeaderboardPanel() { return null; }

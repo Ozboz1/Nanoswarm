@@ -1,1 +1,2 @@
-// Placeholder for src/components/Minimap.jsx
+// Minimap logic placeholder
+export default function Minimap() { return null; }
