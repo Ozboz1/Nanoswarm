@@ -1,14 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export default function GameCanvas() {
   const canvasRef = useRef(null);
-  const [player, setPlayer] = useState({ x: 0, y: 0 });
+  const player = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
   const keys = useRef({});
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
+    // Fullscreen
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -16,43 +17,54 @@ export default function GameCanvas() {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    const handleKeyDown = (e) => (keys.current[e.key.toLowerCase()] = true);
-    const handleKeyUp = (e) => (keys.current[e.key.toLowerCase()] = false);
+    // Controls
+    const setVelocity = () => {
+      const speed = 3;
+      let vx = 0, vy = 0;
+      if (keys.current['w'] || keys.current['arrowup']) vy -= speed;
+      if (keys.current['s'] || keys.current['arrowdown']) vy += speed;
+      if (keys.current['a'] || keys.current['arrowleft']) vx -= speed;
+      if (keys.current['d'] || keys.current['arrowright']) vx += speed;
+      player.current.vx = vx;
+      player.current.vy = vy;
+    };
+
+    const handleKeyDown = (e) => {
+      keys.current[e.key.toLowerCase()] = true;
+      setVelocity();
+    };
+    const handleKeyUp = (e) => {
+      keys.current[e.key.toLowerCase()] = false;
+      setVelocity();
+    };
+
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 
-    const update = () => {
-      const speed = 3;
-      let vx = 0, vy = 0;
-      if (keys.current['w']) vy -= speed;
-      if (keys.current['s']) vy += speed;
-      if (keys.current['a']) vx -= speed;
-      if (keys.current['d']) vx += speed;
-      setPlayer((p) => ({ x: p.x + vx, y: p.y + vy }));
-    };
-
-    const draw = () => {
+    // Game loop
+    const loop = () => {
       const { width, height } = canvas;
+      const p = player.current;
 
-      // Light background
+      // Update position
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // Background
       ctx.fillStyle = '#f0f0f0';
       ctx.fillRect(0, 0, width, height);
 
-      // Moving grid lines
+      // Grid
       const spacing = 40;
       ctx.strokeStyle = '#cccccc';
       ctx.lineWidth = 1;
-
-      // Vertical lines
-      for (let x = -player.x % spacing; x < width; x += spacing) {
+      for (let x = -p.x % spacing; x < width; x += spacing) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
         ctx.lineTo(x, height);
         ctx.stroke();
       }
-
-      // Horizontal lines
-      for (let y = -player.y % spacing; y < height; y += spacing) {
+      for (let y = -p.y % spacing; y < height; y += spacing) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(width, y);
@@ -65,18 +77,15 @@ export default function GameCanvas() {
       ctx.arc(width / 2, height / 2, 20, 0, Math.PI * 2);
       ctx.fill();
 
-      // Game name
+      // Title
       ctx.font = '18px Arial';
       ctx.fillStyle = '#444';
       ctx.textAlign = 'center';
       ctx.fillText('NanoSwarm.io', width / 2, 30);
-    };
 
-    const loop = () => {
-      update();
-      draw();
       requestAnimationFrame(loop);
     };
+
     loop();
 
     return () => {
@@ -84,7 +93,7 @@ export default function GameCanvas() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, [player]);
+  }, []);
 
   return (
     <canvas
