@@ -1,0 +1,1 @@
+export default function MainMenu({ onStart, setUsername }) { return <button onClick={() => { setUsername('TestUser'); onStart(true); }}>Start</button>; }

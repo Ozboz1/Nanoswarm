@@ -1,0 +1,1 @@
+export default function GameCanvas() { return <div style={{color: 'white'}}>Game running...</div>; }
