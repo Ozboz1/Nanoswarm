@@ -1,1 +1,1 @@
-// GameCanvas with XP from combat and level shop logic to follow
+export default function GameCanvas() { return <div style={{color: 'white'}}>Game running...</div>; }
