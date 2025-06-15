@@ -1,5 +1,1 @@
-import React from 'react';
-import GameCanvas from './components/GameCanvas';
-export default function App() {
-  return <GameCanvas />;
-}
+// Firebase-aware App component to follow

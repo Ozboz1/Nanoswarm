@@ -1,1 +1,1 @@
-# NanoSwarm Game
+# NanoSwarm v6 — Firebase + XP from Combat + Level Unlocks
